@@ -13,12 +13,14 @@ async function getStations() {
     //making sure we are getting a station, trying to not get a 
     //specific exit or zone but just the stations name
     if (f.properties.stop_name.includes('Station') && !f.properties.stop_name.includes('Édicule') 
-      && !f.properties.stop_name.includes('(') && !f.properties.stop_name.includes('Zone')
-    && !f.properties.stop_name.includes('Accès')){
+    && !f.properties.stop_name.includes('(') && !f.properties.stop_name.includes('Zone')
+    && !f.properties.stop_name.includes('Accès') && !stations.includes(f.properties.stop_name)
+    && !f.properties.stop_name.includes('/') && !f.properties.stop_name.includes('REM')
+    && !f.properties.stop_name.includes('Terminus')){
       stations.push(f.properties.stop_name);
     }
   });
-  return stations.length;
+  return stations;
 }
 
 const json = await getStations();
