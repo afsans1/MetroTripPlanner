@@ -1,5 +1,4 @@
 import express from 'express';
-import { stat } from 'node:fs';
 import fs from 'node:fs/promises';
 
 const app = express();
@@ -17,15 +16,21 @@ async function getStations() {
     && !f.properties.stop_name.includes('Accès') && !stations.includes(f.properties.stop_name)
     && !f.properties.stop_name.includes('/') && !f.properties.stop_name.includes('REM')
     && !f.properties.stop_name.includes('Terminus')){
-      stations.push(f.properties.stop_name);
+      const station = new Object();
+      station.name = f.properties.stop_name;
+      station.coordinates = f.geometry.coordinates;
+      stations.push(station);
     }
   });
   return stations;
 }
 
-const json = await getStations();
+app.use('/stations', async function (req, res) {
+  const json = await getStations();
+  res.json(json);
+});
 
-console.log(json);
+
 
 app.use(express.static('public'));
 // app.get('/', (req, res) => {
