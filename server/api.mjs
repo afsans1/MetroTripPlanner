@@ -9,21 +9,27 @@ async function getStations() {
   const content = await fs.readFile('server/data/stm_arrets_sig.geojson', 'utf-8');
   const jsonStations = JSON.parse(content);
   jsonStations.features.forEach(f => {
+    const name = f.properties.stop_name;
     //making sure we are getting a station, trying to not get a 
     //specific exit or zone but just the stations name
-    if (f.properties.stop_name.includes('Station') && !f.properties.stop_name.includes('Édicule') 
-    && !f.properties.stop_name.includes('(') && !f.properties.stop_name.includes('Zone')
-    && !f.properties.stop_name.includes('Accès') 
-    && !f.properties.stop_name.includes('/') && !f.properties.stop_name.includes('REM')
-    && !f.properties.stop_name.includes('Terminus')){
+    if (name.includes('Station') 
+    && !name.includes('Édicule') 
+    && !name.includes('(') 
+    && !name.includes('Zone')
+    && !name.includes('Accès') 
+    && !name.includes('/') 
+    && !name.includes('REM')
+    && !name.includes('Terminus')){
       if(stations.length > 0 ){
-        if(!stations[stations.length - 1].name.includes(f.properties.stop_name) ){
-          //adding the rest, making sure there are no duplicates
-          const station = new Object();
-          station.name = f.properties.stop_name;
-          station.coordinates = f.geometry.coordinates;
-          stations.push(station);
-        }
+        stations.forEach(station => {
+          if(!station.name.includes(name) ){
+            //adding the rest, making sure there are no duplicates
+            const station = new Object();
+            station.name = name;
+            station.coordinates = f.geometry.coordinates;
+            stations.push(station);
+          }
+        });
       }else{
         //adding the first station
         const station = new Object();
