@@ -13,13 +13,25 @@ async function getStations() {
     //specific exit or zone but just the stations name
     if (f.properties.stop_name.includes('Station') && !f.properties.stop_name.includes('Édicule') 
     && !f.properties.stop_name.includes('(') && !f.properties.stop_name.includes('Zone')
-    && !f.properties.stop_name.includes('Accès') && !stations.includes(f.properties.stop_name)
+    && !f.properties.stop_name.includes('Accès') 
     && !f.properties.stop_name.includes('/') && !f.properties.stop_name.includes('REM')
     && !f.properties.stop_name.includes('Terminus')){
-      const station = new Object();
-      station.name = f.properties.stop_name;
-      station.coordinates = f.geometry.coordinates;
-      stations.push(station);
+      if(stations.length > 0 ){
+        if(!stations[stations.length - 1].name.includes(f.properties.stop_name) ){
+          //adding the rest, making sure there are no duplicates
+          const station = new Object();
+          station.name = f.properties.stop_name;
+          station.coordinates = f.geometry.coordinates;
+          stations.push(station);
+        }
+      }else{
+        //adding the first station
+        const station = new Object();
+        station.name = f.properties.stop_name;
+        station.coordinates = f.geometry.coordinates;
+        stations.push(station);
+      }
+      
     }
   });
   return stations;
