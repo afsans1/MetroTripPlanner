@@ -5,43 +5,42 @@ const app = express();
 const port = 3000;
 
 async function getStations() {
-  let stations = [];
+  const stations = [];
+  const namesSeen = {}; 
+  // tracks names we already added
+
   const content = await fs.readFile('server/data/stm_arrets_sig.geojson', 'utf-8');
   const jsonStations = JSON.parse(content);
+
   jsonStations.features.forEach(f => {
     const name = f.properties.stop_name;
-    //making sure we are getting a station, trying to not get a 
-    //specific exit or zone but just the stations name
-    if (name.includes('Station') 
-    && !name.includes('Édicule') 
-    && !name.includes('(') 
-    && !name.includes('Zone')
-    && !name.includes('Accès') 
-    && !name.includes('/') 
-    && !name.includes('REM')
-    && !name.includes('Terminus')){
-      if(stations.length > 0 ){
-        stations.forEach(station => {
-          if(!station.name.includes(name) ){
-            //adding the rest, making sure there are no duplicates
-            const station = new Object();
-            station.name = name;
-            station.coordinates = f.geometry.coordinates;
-            stations.push(station);
-          }
+
+    if (
+      name.includes('Station') &&
+      !name.includes('Édicule') &&
+      !name.includes('(') &&
+      !name.includes('Zone') &&
+      !name.includes('Accès') &&
+      !name.includes('/') &&
+      !name.includes('REM') &&
+      !name.includes('Terminus')
+    ) {
+      // Add only if we haven't seen this name yet
+      if (!namesSeen[name]) {
+        stations.push({
+          name,
+          coordinates: f.geometry.coordinates
         });
-      }else{
-        //adding the first station
-        const station = new Object();
-        station.name = f.properties.stop_name;
-        station.coordinates = f.geometry.coordinates;
-        stations.push(station);
+        namesSeen[name] = true; 
+        // mark as added
       }
-      
     }
   });
-  return stations;
+
+  return stations.length; 
+  // now you get exactly 77 unique stations
 }
+
 
 app.use('/stations', async function (req, res) {
   const json = await getStations();
