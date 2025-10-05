@@ -11,8 +11,7 @@ async function getStations() {
   jsonStations.features.forEach(f => {
     const name = f.properties.stop_name;
     const url = f.properties.stop_url;
-    //making sure we are getting a station, trying to not get a 
-    //specific exit or zone but just the stations name
+    //making sure we are getting a station by making sure the url includes metro
     if (url !== null && url.includes('metro')  ){
       const station = new Object();
       station.name = name;
@@ -20,7 +19,7 @@ async function getStations() {
       stations.push(station);
     }
   });
-  return stations.length;
+  return stations;
 }
 
 app.use('/stations', async function (req, res) {
