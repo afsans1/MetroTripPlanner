@@ -5,42 +5,23 @@ const app = express();
 const port = 3000;
 
 async function getStations() {
-  const stations = [];
-  const namesSeen = {}; 
-  // tracks names we already added
-
+  let stations = [];
   const content = await fs.readFile('server/data/stm_arrets_sig.geojson', 'utf-8');
   const jsonStations = JSON.parse(content);
-
   jsonStations.features.forEach(f => {
     const name = f.properties.stop_name;
-
-    if (
-      name.includes('Station') &&
-      !name.includes('Édicule') &&
-      !name.includes('(') &&
-      !name.includes('Zone') &&
-      !name.includes('Accès') &&
-      !name.includes('/') &&
-      !name.includes('REM') &&
-      !name.includes('Terminus')
-    ) {
-      // Add only if we haven't seen this name yet
-      if (!namesSeen[name]) {
-        stations.push({
-          name,
-          coordinates: f.geometry.coordinates
-        });
-        namesSeen[name] = true; 
-        // mark as added
-      }
+    const url = f.properties.stop_url;
+    //making sure we are getting a station, trying to not get a 
+    //specific exit or zone but just the stations name
+    if (url !== null && url.includes('metro')  ){
+      const station = new Object();
+      station.name = name;
+      station.coordinates = f.geometry.coordinates;
+      stations.push(station);
     }
   });
-
-  return stations.length; 
-  // now you get exactly 77 unique stations
+  return stations.length;
 }
-
 
 app.use('/stations', async function (req, res) {
   const json = await getStations();
