@@ -22,6 +22,8 @@ async function getStations() {
   return stations;
 }
 
+app.use(express.static('../metro-client'));
+
 app.use('/stations', async function (req, res) {
   const json = await getStations();
   res.json(json);
@@ -29,7 +31,7 @@ app.use('/stations', async function (req, res) {
 
 
 
-app.use(express.static('public'));
+
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');
 // });
