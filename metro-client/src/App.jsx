@@ -8,7 +8,7 @@ function App() {
   const [endStation, setEndStation] = useState('');
 
   useEffect(() => {
-    fetch('stations').
+    fetch('api').
       then(res => {
         if (!res.ok){
           throw new Error(`Error! ${res.status}`);
@@ -20,8 +20,6 @@ function App() {
         // setAllStations(data);
         if(data.length === 73){
           setAllStations(data);
-          console.log('Fetched stations count:', data.length);
-          console.log('Fetched stations:', data);
         }else{
           throw new Error(`Error! Didn't get all the stations!`);
         }
@@ -32,20 +30,17 @@ function App() {
       });
   }, []);
 
-  function handleStations(){
+  function handleStations(startStation, endStation){
     if(startStation === ''){
       setStartStation(allStations[0].name);
     }
     if(endStation === ''){
       setEndStation(allStations[allStations.length - 1].name);
     }
-    console.log('start', startStation);
-    console.log('end', endStation);
     const startPosition = allStations.indexOf(startStation);
     const endPosition = allStations.indexOf(endStation);
       
     const newStations = allStations.slice(startPosition, endPosition + 1);
-    // console.log(newStations);
     setAllStations(newStations);
   }
 
@@ -56,9 +51,9 @@ function App() {
         <select
           id="startStation"
           name="startStation" value={startStation}
-          onChange={() =>{
-            setStartStation(startStation);
-            handleStations();
+          onChange={(e) =>{
+            setStartStation(e.target.value);
+            handleStations(startStation, endStation);
           }}
         >
           <option value="" disabled>-- Select A Starting Station --</option>
@@ -71,8 +66,8 @@ function App() {
         <select
           id="endStation"
           name="endStation" value={endStation}
-          onChange={() =>{
-            setEndStation(endStation);
+          onChange={(e) =>{
+            setEndStation(e.target.value);
             handleStations();
           }}
         >
@@ -96,7 +91,6 @@ function App() {
         <h1>Metro Trip Planner</h1>
         <h2>Select Start and End Stations</h2>
         {dropDownStations(allStations)}
-        {console.log('Rendering dropdown with:', allStations.length, 'stations')}
       </div>
       <MapExample />
     </div>
