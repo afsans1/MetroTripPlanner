@@ -4,11 +4,11 @@ import MapExample from './components/MapExample';
 
 function App() {
   const [allStations, setAllStations] = useState([]);
-  const [selectedStartStation, setSelectedStartStation] = useState('');
+  // const [selectedStartStation, setSelectedStartStation] = useState('');
   // const [selectedEndStation, setSelectedEndStation] = useState('');
 
   useEffect(() => {
-    fetch('/stations').
+    fetch('/localhost').
       then(res => {
         if (!res.ok){
           throw new Error(`Error! ${res.status}`);
@@ -16,32 +16,43 @@ function App() {
         return res.json();
       }).
       then(data => {
-        console.log('Fetched stations:', data);
-        if(data.length == 73){
+        
+        // setAllStations(data);
+        if(data.length === 73){
           setAllStations(data);
+          console.log('Fetched stations count:', data.length);
+          console.log('Fetched stations:', data);
         }else{
           throw new Error(`Error! Didn't get all the stations!`);
         }
+      }).
+      catch(e => {
+        throw new Error(`Error! ${e}`);
+        
       });
   }, []);
 
-  function handleStations(e){
-    setSelectedStartStation(e.target.value);
+  function handleStations(startStationName, endStationName = allStations[allStations.length]){
+    const startPosition = allStations.indexOf(startStationName);
+    const endPosition = allStations.indexOf(endStationName);
+      
+    const newStations = allStations.slice(startPosition, endPosition + 1);
+    setAllStations(newStations);
   }
 
   function dropDownStations(stations){
     return(
       <form>
-        <label htmlFor="StartStation">Start Station:</label>
+        <label>Start Station:</label>
         <select
           id="startStation"
-          name="startStation" value={selectedStartStation}
+          name="startStation"
           onChange={handleStations}
         >
           <option value="" disabled>-- Select A Starting Station --</option>
-          {stations.map(station => {
-            <option key={station.name} value={station.name}>{station.name}</option>;
-          })}
+          {stations.map(station => 
+            <option key={station.name} value={station.name}>{station.name}</option>
+          )}
         
 
         </select>
@@ -72,7 +83,7 @@ function App() {
         <h1>Metro Trip Planner</h1>
         <h2>Select Start and End Stations</h2>
         {dropDownStations(allStations)}
-        
+        {console.log('Rendering dropdown with:', allStations.length, 'stations')}
       </div>
       <MapExample />
     </div>
