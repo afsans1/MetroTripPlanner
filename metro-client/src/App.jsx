@@ -6,9 +6,10 @@ function App() {
   const [allStations, setAllStations] = useState([]);
   const [startStation, setStartStation] = useState('');
   const [endStation, setEndStation] = useState('');
+  const [routeStations, setRouteStations] = useState([]);
 
   useEffect(() => {
-    fetch('api').
+    fetch('/api/stations').
       then(res => {
         if (!res.ok){
           throw new Error(`Error! ${res.status}`);
@@ -21,7 +22,7 @@ function App() {
         if(data.length === 73){
           setAllStations(data);
         }else{
-          throw new Error(`Error! Didn't get all the stations!`);
+          throw new Error(`Error! Didn't get all the stations! Length: ${data.length}`);
         }
       }).
       catch(e => {
@@ -31,29 +32,46 @@ function App() {
   }, []);
 
   function handleStations(startStation, endStation){
-    if(startStation === ''){
-      setStartStation(allStations[0].name);
-    }
-    if(endStation === ''){
-      setEndStation(allStations[allStations.length - 1].name);
-    }
-    const startPosition = allStations.indexOf(startStation);
-    const endPosition = allStations.indexOf(endStation);
-      
-    const newStations = allStations.slice(startPosition, endPosition + 1);
-    setAllStations(newStations);
+    fetch(`/api/${startStation}/${endStation}`).
+      then(res => {
+        if (!res.ok){
+          throw new Error(`Error! ${res.status}`);
+        }
+        return res.json();
+      }).
+      then(data => setAllStations(data)).
+      catch(e => {
+        throw new Error(`Error! ${e.message}`);
+      });
   }
 
-  function dropDownStations(stations){
+  async function handleRouteStations(startStation){
+    const stationPosition = allStations.findIndex(station => station.name === startStation);
+    const stationRoute = allStations[stationPosition].routeId;
+    fetch(`/api/${stationRoute}`).
+      then(res => {
+        if (!res.ok){
+          throw new Error(`Error! ${res.status}`);
+        }
+        return res.json();
+      }).
+      then(data => setRouteStations(data)).
+      catch(e => {
+        throw new Error(`Error! ${e.message}`);
+      });
+  }
+
+  function dropDownStartStations(stations){
     return(
-      <form>
+      <>
         <label>Start Station:</label>
         <select
           id="startStation"
           name="startStation" value={startStation}
           onChange={(e) =>{
-            setStartStation(e.target.value);
-            handleStations(startStation, endStation);
+            const newStart = e.target.value;
+            setStartStation(newStart);
+            handleRouteStations(newStart);
           }}
         >
           <option value="" disabled>-- Select A Starting Station --</option>
@@ -61,28 +79,28 @@ function App() {
             <option key={station.name} value={station.name}>{station.name}</option>
           )}
         </select>
-
-        <label htmlFor="EndStation">End Station:</label>
-        <select
-          id="endStation"
-          name="endStation" value={endStation}
-          onChange={(e) =>{
-            setEndStation(e.target.value);
-            handleStations();
-          }}
-        >
-          <option value="" disabled>-- Select An Ending Station --</option>
-          {stations.map(station => 
-            <option key={station.name} value={station.name}>{station.name}</option>
-          )}
-        
-
-        </select>
-        
-      </form>
-
-      
+      </>
     );
+  }
+
+  function dropDownEndStations(stations){
+    return( <>
+      <label htmlFor="EndStation">End Station:</label>
+      <select
+        id="endStation"
+        name="endStation" value={endStation}
+        onChange={(e) =>{
+          const newEnd = e.target.value; 
+          setEndStation(newEnd);
+          handleStations(startStation, newEnd);
+        }}
+      >
+        <option value="" disabled>-- Select An Ending Station --</option>
+        {stations.map(station => 
+          <option key={station.name} value={station.name}>{station.name}</option>
+        )}
+      </select>
+    </>);
   }
 
   return (
@@ -90,7 +108,11 @@ function App() {
       <div>
         <h1>Metro Trip Planner</h1>
         <h2>Select Start and End Stations</h2>
-        {dropDownStations(allStations)}
+        <form>
+          {dropDownStartStations(allStations)}
+          {dropDownEndStations(routeStations)}
+        </form>
+        
       </div>
       <MapExample />
     </div>

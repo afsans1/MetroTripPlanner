@@ -6,9 +6,14 @@ const port = 3000;
 let stations = [];
 
 async function getStations() {
+  if (stations.length > 0) return stations;
+
   try{
     const content = await fs.readFile('server/data/stm_arrets_sig.geojson', 'utf-8');
     const jsonStations = JSON.parse(content);
+
+    stations = [];
+
     jsonStations.features.forEach(f => {
       const name = f.properties.stop_name;
       const url = f.properties.stop_url;
@@ -68,7 +73,7 @@ async function getStationsBetween(startStation, endStation){
   }
 }
 
-app.get('/api', async function (req, res) {
+app.get('/api/stations', async function (req, res) {
   const json = await getStations();
   res.json(json);
 });
