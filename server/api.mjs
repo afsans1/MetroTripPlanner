@@ -44,9 +44,14 @@ async function getStationsOnLine(num) {
 }
 
 async function getStationsBetween(startStation, endStation){
-  const startPosition = stations.indexOf(startStation);
-  const endPosition = stations.indexOf(endStation);
-  stations.slice(startPosition, endPosition + 1);
+  if(stations.length === 0){
+    stations = await getStations();
+  }else{
+    const startPosition = stations.findIndex(station => station.name === startStation);
+    const endPosition = stations.findIndex(station => station.name === endStation);
+    const newStations = stations.slice(startPosition, endPosition + 1);
+    return newStations;
+  }
 }
 
 app.get('/api', async function (req, res) {
@@ -60,7 +65,7 @@ app.get('/api/:num', async (req, res) => {
 });
 
 app.get('/api/:startStation/:endStation', async (req, res) => {
-  let json = await getStationsBetween(req.params.startStation, req.params.endStation);
+  const json = await getStationsBetween(req.params.startStation, req.params.endStation);
   res.json(json);
 });
 
