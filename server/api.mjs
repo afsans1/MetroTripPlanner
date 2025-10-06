@@ -44,12 +44,26 @@ async function getStationsOnLine(num) {
 }
 
 async function getStationsBetween(startStation, endStation){
+  let newStations;
   if(stations.length === 0){
     stations = await getStations();
   }else{
     const startPosition = stations.findIndex(station => station.name === startStation);
     const endPosition = stations.findIndex(station => station.name === endStation);
-    const newStations = stations.slice(startPosition, endPosition + 1);
+    if(endPosition === 0){
+      const reversedStations = stations.slice().reverse();
+      newStations = reversedStations.slice(
+        -1 * (startPosition + 1), 
+        reversedStations[reversedStations.length]
+      );
+    }else if(startPosition === endPosition){
+      return startPosition[startPosition];
+    }else if(startPosition < endPosition && (startPosition !== 0 || endPosition !== 0)){
+      newStations = stations.slice(startPosition, endPosition + 1);
+    }else if(startPosition > endPosition && (startPosition !== 0 || endPosition !== 0)){
+      const reversedStations = stations.slice().reverse();
+      newStations = reversedStations.slice(-1 * (startPosition + 1), -1 * (endPosition + 1));
+    }
     return newStations;
   }
 }
