@@ -4,11 +4,11 @@ import MapExample from './components/MapExample';
 
 function App() {
   const [allStations, setAllStations] = useState([]);
-  // const [selectedStartStation, setSelectedStartStation] = useState('');
-  // const [selectedEndStation, setSelectedEndStation] = useState('');
+  const [startStation, setStartStation] = useState('');
+  const [endStation, setEndStation] = useState('');
 
   useEffect(() => {
-    fetch('/localhost').
+    fetch('stations').
       then(res => {
         if (!res.ok){
           throw new Error(`Error! ${res.status}`);
@@ -32,11 +32,20 @@ function App() {
       });
   }, []);
 
-  function handleStations(startStationName, endStationName = allStations[allStations.length]){
-    const startPosition = allStations.indexOf(startStationName);
-    const endPosition = allStations.indexOf(endStationName);
+  function handleStations(){
+    if(startStation === ''){
+      setStartStation(allStations[0].name);
+    }
+    if(endStation === ''){
+      setEndStation(allStations[allStations.length - 1].name);
+    }
+    console.log('start', startStation);
+    console.log('end', endStation);
+    const startPosition = allStations.indexOf(startStation);
+    const endPosition = allStations.indexOf(endStation);
       
     const newStations = allStations.slice(startPosition, endPosition + 1);
+    // console.log(newStations);
     setAllStations(newStations);
   }
 
@@ -46,30 +55,34 @@ function App() {
         <label>Start Station:</label>
         <select
           id="startStation"
-          name="startStation"
-          onChange={handleStations}
+          name="startStation" value={startStation}
+          onChange={() =>{
+            setStartStation(startStation);
+            handleStations();
+          }}
         >
           <option value="" disabled>-- Select A Starting Station --</option>
+          {stations.map(station => 
+            <option key={station.name} value={station.name}>{station.name}</option>
+          )}
+        </select>
+
+        <label htmlFor="EndStation">End Station:</label>
+        <select
+          id="endStation"
+          name="endStation" value={endStation}
+          onChange={() =>{
+            setEndStation(endStation);
+            handleStations();
+          }}
+        >
+          <option value="" disabled>-- Select An Ending Station --</option>
           {stations.map(station => 
             <option key={station.name} value={station.name}>{station.name}</option>
           )}
         
 
         </select>
-
-        {/* <label htmlFor="EndStation">End Station:</label>
-        <select
-          id="endStation"
-          name="endStation" value={selectedEndStation}
-          onChange={handleStations}
-        >
-          <option value="" disabled>-- Select An Ending Station --</option>
-          {stations.map(station => {
-            <option key={station.name} value={station.name}>{station.name}</option>;
-          })}
-        
-
-        </select> */}
         
       </form>
 
