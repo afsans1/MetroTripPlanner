@@ -1,5 +1,8 @@
 # A2 Metro Trip Planner
 
+## Requirements
+The website should allow the user to create a trip planner based on which station they want to start at and where to end. The website should use the stm stops geojson file, parse it and use that list to display the correct stations. There should be a client and server side.
+
 Express + React app
 
 Description: (briefly describe what the app does)
