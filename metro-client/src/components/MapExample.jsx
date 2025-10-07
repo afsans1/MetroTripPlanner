@@ -9,24 +9,27 @@ import './Map.css';
 // See https://www.youtube.com/watch?v=jD6813wGdBA if you want to customize the map
 // further (optional)
 
-export default function MapExample() {
-  const points =  [ 
-    {
-      name: 'one',
-      coordinates: [45.446465999988021, -73.603118],
-      color: 'lime'
-    },
-    {
-      name: 'two',
-      coordinates: [45.501342315993, -73.60383900042255],
-      color: 'lime'
-    },
-    {
-      name: 'three',
-      coordinates: [45.520830163089066, -73.58006390089389],
-      color: 'lime'
-    },
-  ];
+export default function MapExample({allStations = []}) {
+  let points = [];
+  let colour = '';
+  allStations.forEach(station => {
+    if (station.routeId === '1'){
+      colour = 'lime';
+    }else if(station.routeId === '2'){
+      colour = 'orange';
+    }else if(station.routeId === '4'){
+      colour = 'yellow';
+    }else if(station.routeId === '5'){
+      colour = 'blue';
+    }
+    points.push({
+      name: station.name,
+      coordinates: station.coordinates,
+      colour: colour
+    });
+    console.log(points);
+  });
+  
   const attribution = 
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -52,5 +55,6 @@ export default function MapExample() {
         <MetroMarkers route={points}/> 
       </MapContainer>
     </div>
+    
   );
 }

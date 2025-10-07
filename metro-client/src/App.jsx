@@ -114,7 +114,7 @@ function App() {
         </form>
         
       </div>
-      <MapExample />
+      <MapExample stations={allStations}/>
     </div>
   );
 }
