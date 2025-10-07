@@ -18,11 +18,12 @@ export default function MetroMarkers({route}) {
   //beware, hardcoded!!!
   return (
     <>
-      {points.map((point, i) => {
-        <Marker key={i} position={point.coordinates} icon={customIcon} >
-          <Popup><p>{point.coordinates}</p></Popup>
-        </Marker>;
-      })}
+      {points.map((point, i) => (
+        <Marker key={i} position={[point.coordinates[1], point.coordinates[0]]} icon={customIcon} >
+          <Popup><p>{point.name}</p></Popup>
+        </Marker>
+      ))}
+      {/* {console.log(points[0].coordinates[0], points[0].coordinates[1])} */}
       
       {/* <Marker position={route[1].coordinates} icon={customIcon} />
       <Marker position={route[2].coordinates} icon={customIcon} />
