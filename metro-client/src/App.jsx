@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import MapExample from './components/MapExample';
+import RouteBlocks from './RouteBlocks';
 
 function App() {
+  const [allStartStations, setAllStartStations] = useState([]);
   const [allStations, setAllStations] = useState([]);
   const [startStation, setStartStation] = useState('');
   const [endStation, setEndStation] = useState('');
@@ -21,6 +23,7 @@ function App() {
         // setAllStations(data);
         if(data.length === 73){
           setAllStations(data);
+          setAllStartStations(data);
         }else{
           throw new Error(`Error! Didn't get all the stations! Length: ${data.length}`);
         }
@@ -109,20 +112,19 @@ function App() {
         <h1>Metro Trip Planner</h1>
         <h2>Select Start and End Stations</h2>
         <form>
-          {dropDownStartStations(allStations)}
+          {dropDownStartStations(allStartStations)}
           {startStation && routeStations ? dropDownEndStations(routeStations) : <div></div>}
         </form>
         
       </div>
       { endStation ? 
         <>
-          {allStations.map((station) => 
-            <div key={station.name}>
-              <button style={{ backgroundColor: station.color,
-                padding: '50px', display: 'flex'}}></button>
-              <p>{station.name}</p>
-            </div>
-          )}
+          <h3 style={{ color: allStations[0].color}}>
+            {allStations[0].color} Line:{allStations.length} stations
+          </h3>
+          <div style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap'}}>
+            <RouteBlocks allStations={allStations}/>
+          </div>
           <MapExample allStations={allStations}/>
         </>
         : <div></div>}
