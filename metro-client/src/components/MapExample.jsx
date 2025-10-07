@@ -14,7 +14,7 @@ export default function MapExample({allStations = []}) {
   let color = '';
   allStations.forEach(station => {
     if (station.routeId === '1'){
-      color = 'lime';
+      color = 'green';
     }else if(station.routeId === '2'){
       color = 'orange';
     }else if(station.routeId === '4'){
@@ -55,6 +55,5 @@ export default function MapExample({allStations = []}) {
         <MetroMarkers route={points}/> 
       </MapContainer>
     </div>
-    
   );
 }

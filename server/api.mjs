@@ -5,6 +5,8 @@ const app = express();
 const port = 3000;
 let stations = [];
 
+app.use(express.static('../metro-client/dist'));
+
 async function getStations() {
   if (stations.length > 0) return stations;
 
@@ -30,6 +32,23 @@ async function getStations() {
         station.name = name;
         station.coordinates = f.geometry.coordinates;
         station.routeId = routeId;
+        switch(routeId){
+        case '1':
+          station.color = 'green';
+          break;
+        case '2':
+          station.color = 'orange';
+          break;
+        case '4':
+          station.color = 'yellow';
+          break;
+        case '5':
+          station.color = 'blue';
+          break;
+        default:
+          station.color = 'pink';
+        }
+        
         stations.push(station);
       }
     });
@@ -88,7 +107,7 @@ app.get('/api/:startStation/:endStation', async (req, res) => {
   res.json(json);
 });
 
-app.use(express.static('../metro-client/public'));
+
 
 app.listen(port, () => {
   console.log(`Example app app listening at http://localhost:${port}`);

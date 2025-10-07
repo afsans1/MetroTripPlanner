@@ -110,11 +110,22 @@ function App() {
         <h2>Select Start and End Stations</h2>
         <form>
           {dropDownStartStations(allStations)}
-          {dropDownEndStations(routeStations)}
+          {startStation && routeStations ? dropDownEndStations(routeStations) : <div></div>}
         </form>
         
       </div>
-      <MapExample allStations={allStations}/>
+      { endStation ? 
+        <>
+          {allStations.map((station) => 
+            <div key={station.name}>
+              <button style={{ backgroundColor: station.color,
+                padding: '50px', display: 'flex'}}></button>
+              <p>{station.name}</p>
+            </div>
+          )}
+          <MapExample allStations={allStations}/>
+        </>
+        : <div></div>}
     </div>
   );
 }

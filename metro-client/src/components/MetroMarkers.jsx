@@ -2,7 +2,7 @@ import { Icon  } from 'leaflet';
 import { 
   Marker,
   Popup,
-  // Polyline
+  Polyline
 } from 'react-leaflet';
 
 import markerImage from '../assets/marker-icon.png';
@@ -14,20 +14,20 @@ const customIcon = new Icon({
 });
 
 export default function MetroMarkers({route}) {
-  const points = route.map(position => position);
+  const points = route.map(position => [position.coordinates[1], position.coordinates[0]]);
   //beware, hardcoded!!!
   return (
     <>
-      {points.map((point, i) => (
-        <Marker key={i} position={[point.coordinates[1], point.coordinates[0]]} icon={customIcon} >
+      {points.map((point, i) => 
+        <Marker 
+          key={i} 
+          position={point} 
+          icon={customIcon} 
+        >
           <Popup><p>{point.name}</p></Popup>
         </Marker>
-      ))}
-      {/* {console.log(points[0].coordinates[0], points[0].coordinates[1])} */}
-      
-      {/* <Marker position={route[1].coordinates} icon={customIcon} />
-      <Marker position={route[2].coordinates} icon={customIcon} />
-      <Polyline pathOptions={{color: route[0].color}} positions={points} /> */}
+      )}
+      <Polyline pathOptions={{color: route[0]?.color}} positions={points} />
     </>
   );
 }
