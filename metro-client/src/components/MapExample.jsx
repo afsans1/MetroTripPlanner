@@ -10,16 +10,6 @@ import './Map.css';
 // further (optional)
 
 export default function MapExample({allStations = []}) {
-  let points = [];
-  allStations.forEach(station => {
-    points.push({
-      name: station.name,
-      lat: station.coordinates[1],
-      lon: station.coordinates[0],
-      color: station.color
-    });
-  });
-  
   const attribution = 
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -42,7 +32,7 @@ export default function MapExample({allStations = []}) {
           attribution={attribution}
           url={tileUrl}
         />
-        <MetroMarkers route={points}/> 
+        <MetroMarkers route={allStations}/> 
       </MapContainer>
     </div>
   );

@@ -14,19 +14,19 @@ const customIcon = new Icon({
 });
 
 export default function MetroMarkers({route}) {
+  const points = route.map(point => [point.coordinates[1], point.coordinates[0]] );
   return (
     <>
       {route.map((point, i) => 
-      
         <Marker
           key={i}
-          position={[point.lat, point.lon]} 
+          position={[point.coordinates[1], point.coordinates[0]]} 
           icon={customIcon} 
         >
           <Popup><p>{point.name}</p></Popup>
         </Marker>
       )}
-      <Polyline pathOptions={{color: route[0]?.color}} positions={route} />
+      <Polyline pathOptions={{color: route[0]?.color}} positions={points} />
     </>
   );
 }
