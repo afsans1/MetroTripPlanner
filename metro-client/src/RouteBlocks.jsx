@@ -1,7 +1,7 @@
-export default function RouteBlocks({ allStations, setAllStations }) {
+export default function RouteBlocks({ route, setroute }) {
   
   function selectButton(selectedStation){
-    allStations = allStations.map((station) => {
+    route = route.map((station) => {
       station.selected = false;
       if(station.name === selectedStation.name){
         station.selected = true;
@@ -10,12 +10,12 @@ export default function RouteBlocks({ allStations, setAllStations }) {
         return station;
       }
     });
-    setAllStations(allStations);
+    setroute(route);
   }
 
   return (
     <>
-      {allStations.map((station) => (
+      {route.map((station) => (
         <div key={station.name}>
           <button
             onClick={() => selectButton(station)}

@@ -5,7 +5,7 @@ import RouteBlocks from './RouteBlocks';
 
 function App() {
   const [allStartStations, setAllStartStations] = useState([]);
-  const [allStations, setAllStations] = useState([]);
+  const [route, setroute] = useState([]);
   const [startStation, setStartStation] = useState('');
   const [endStation, setEndStation] = useState('');
   const [routeStations, setRouteStations] = useState([]);
@@ -25,7 +25,7 @@ function App() {
       }).
       then(data => {
         
-        // setAllStations(data);
+        // setroute(data);
         if(data.length === 73){
           setAllStartStations(data);
         }else{
@@ -47,13 +47,13 @@ function App() {
           }
           return res.json();
         }).
-        then(data => setAllStations(data)).
+        then(data => setroute(data)).
         catch(e => {
           throw new Error(`Error! ${e.message}`);
         });
     }else{
       console.log('No need to plan out a trip to the station that you are already at!');
-      setAllStations([]);
+      setroute([]);
     }
   }
 
@@ -126,15 +126,15 @@ function App() {
         </form>
         
       </div>
-      { endStation && allStations.length > 0 ? 
+      { endStation && route.length > 0 ? 
         <>
-          <h3 style={{ color: allStations[0].color}}>
-            {allStations[0].color} Line:{allStations.length} stations
+          <h3 style={{ color: route[0].color}}>
+            {route[0].color} Line:{route.length} stations
           </h3>
           <div style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap'}}>
-            <RouteBlocks allStations={allStations} setAllStations={setAllStations}/>
+            <RouteBlocks route={route} setroute={setroute}/>
           </div>
-          <MapExample allStations={allStations}/>
+          <MapExample route={route}/>
         </>
         : <div></div>}
     </div>
