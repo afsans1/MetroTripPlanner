@@ -22,7 +22,6 @@ function App() {
         
         // setAllStations(data);
         if(data.length === 73){
-          setAllStations(data);
           setAllStartStations(data);
         }else{
           throw new Error(`Error! Didn't get all the stations! Length: ${data.length}`);
@@ -35,22 +34,27 @@ function App() {
   }, []);
 
   function handleStations(startStation, endStation){
-    fetch(`/api/${startStation}/${endStation}`).
-      then(res => {
-        if (!res.ok){
-          throw new Error(`Error! ${res.status}`);
-        }
-        return res.json();
-      }).
-      then(data => setAllStations(data)).
-      catch(e => {
-        throw new Error(`Error! ${e.message}`);
-      });
+    if(startStation !== endStation){
+      fetch(`/api/${startStation}/${endStation}`).
+        then(res => {
+          if (!res.ok){
+            throw new Error(`Error! ${res.status}`);
+          }
+          return res.json();
+        }).
+        then(data => setAllStations(data)).
+        catch(e => {
+          throw new Error(`Error! ${e.message}`);
+        });
+    }else{
+      <p>No trip needed to go to the station you are at already!</p>;
+      setAllStations([]);
+    }
   }
 
   async function handleRouteStations(startStation){
-    const stationPosition = allStations.findIndex(station => station.name === startStation);
-    const stationRoute = allStations[stationPosition].routeId;
+    const stationPosition = allStartStations.findIndex(station => station.name === startStation);
+    const stationRoute = allStartStations[stationPosition].routeId;
     fetch(`/api/${stationRoute}`).
       then(res => {
         if (!res.ok){
@@ -117,7 +121,7 @@ function App() {
         </form>
         
       </div>
-      { endStation ? 
+      { endStation && allStations.length > 0 ? 
         <>
           <h3 style={{ color: allStations[0].color}}>
             {allStations[0].color} Line:{allStations.length} stations
