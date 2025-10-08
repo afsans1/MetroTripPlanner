@@ -18,7 +18,6 @@ export default function MapExample({allStations = []}) {
       lon: station.coordinates[0],
       color: station.color
     });
-    console.log(points);
   });
   
   const attribution = 

@@ -9,6 +9,11 @@ function App() {
   const [startStation, setStartStation] = useState('');
   const [endStation, setEndStation] = useState('');
   const [routeStations, setRouteStations] = useState([]);
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach(button => 
+    button.addEventListener('click', e=> e.target.style.width = '55px')
+  );
+  
 
   useEffect(() => {
     fetch('/api/stations').
@@ -51,12 +56,6 @@ function App() {
       setAllStations([]);
     }
   }
-
-  // function selectStation(station){
-  //   if(station.selected === true){
-  //     allStations[station.name].style.width = '55px';
-  //   }
-  // }
 
   async function handleRouteStations(startStation){
     const stationPosition = allStartStations.findIndex(station => station.name === startStation);
@@ -133,7 +132,7 @@ function App() {
             {allStations[0].color} Line:{allStations.length} stations
           </h3>
           <div style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap'}}>
-            <RouteBlocks allStations={allStations}/>
+            <RouteBlocks allStations={allStations} setAllStations={setAllStations}/>
           </div>
           <MapExample allStations={allStations}/>
         </>
