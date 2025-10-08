@@ -11,23 +11,14 @@ import './Map.css';
 
 export default function MapExample({allStations = []}) {
   let points = [];
-  let color = '';
   allStations.forEach(station => {
-    if (station.routeId === '1'){
-      color = 'green';
-    }else if(station.routeId === '2'){
-      color = 'orange';
-    }else if(station.routeId === '4'){
-      color = 'yellow';
-    }else if(station.routeId === '5'){
-      color = 'blue';
-    }
     points.push({
       name: station.name,
-      coordinates: station.coordinates,
-      color: color
+      lat: station.coordinates[1],
+      lon: station.coordinates[0],
+      color: station.color
     });
-    // console.log(points);
+    console.log(points);
   });
   
   const attribution = 

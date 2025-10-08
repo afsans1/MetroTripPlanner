@@ -47,10 +47,16 @@ function App() {
           throw new Error(`Error! ${e.message}`);
         });
     }else{
-      <p>No trip needed to go to the station you are at already!</p>;
+      console.log('No need to plan out a trip to the station that you are already at!');
       setAllStations([]);
     }
   }
+
+  // function selectStation(station){
+  //   if(station.selected === true){
+  //     allStations[station.name].style.width = '55px';
+  //   }
+  // }
 
   async function handleRouteStations(startStation){
     const stationPosition = allStartStations.findIndex(station => station.name === startStation);

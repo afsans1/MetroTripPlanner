@@ -32,6 +32,7 @@ async function getStations() {
         station.name = name;
         station.coordinates = f.geometry.coordinates;
         station.routeId = routeId;
+        station.selected = false;
         switch(routeId){
         case '1':
           station.color = 'green';
