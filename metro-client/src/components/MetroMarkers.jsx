@@ -39,14 +39,24 @@ function getWikiDef(station){
 
 export default function MetroMarkers({route, setActiveStation}) {
   const [wikiData, setWikiData] = useState({});
+  const MAXNUMFETCH = 50;
 
   //gets all the wiki definitions when the route is changed
   useEffect(() => {
     async function fetchAll() {
       const defs = {};
       for (const point of route) {
+        //I added this condiditon in order to not overload the server accidentally
+        //I couldve added a sleep but it wouldve slowed down my website a lot
+        //the number of fetches for this website arent that big so we dont need to add 
+        //a set interval or timeout but this condition is there just in case
+        if(route.count <= MAXNUMFETCH){
+          defs[point.name] = await getWikiDef(point);
+        }else{
+          return;
+        }
         //build the defs with the def of the station wiki using the helper method
-        defs[point.name] = await getWikiDef(point);
+        
       }
       //sets the wikidata with the built defs
       setWikiData(defs);
