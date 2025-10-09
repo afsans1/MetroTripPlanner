@@ -44,5 +44,13 @@ node --watch server/api.mjs
 ### Client and Server
 
 
-> Fill this in 
+npm run build
+npm run start
+
+## Known bugs / missing features
+I fetch from wikipedia multiple times and that could overload the server if there were a lot of stations.
+I was planning on implementing the multi-line feature but i didnt have any time with my other midterms. 
+
+
+
 

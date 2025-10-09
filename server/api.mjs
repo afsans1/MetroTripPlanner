@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 const app = express();
 const port = 3000;
 let stations = [];
-
+//check if the route ecxists
 app.use(express.static('../metro-client/dist'));
 
 //getting all of the metro stations
@@ -78,17 +78,11 @@ async function getStationsBetween(startStation, endStation){
   }else{
     const startPosition = stations.findIndex(station => station.name === startStation);
     const endPosition = stations.findIndex(station => station.name === endStation);
-    if(endPosition === 0){
-      const reversedStations = stations.slice().reverse();
-      newStations = reversedStations.slice(
-        -1 * (startPosition + 1), 
-        reversedStations[reversedStations.length]
-      );
-    }else if(startPosition === endPosition){
+    if(startPosition === endPosition){
       return startPosition[startPosition];
-    }else if(startPosition < endPosition && (startPosition !== 0 || endPosition !== 0)){
+    }else if(startPosition < endPosition){
       newStations = stations.slice(startPosition, endPosition + 1);
-    }else if(startPosition > endPosition && (startPosition !== 0 || endPosition !== 0)){
+    }else if(startPosition > endPosition){
       const reversedStations = stations.slice().reverse();
       newStations = reversedStations.slice(-1 * (startPosition + 1), -1 * (endPosition + 1));
     }

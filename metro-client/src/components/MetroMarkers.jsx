@@ -17,7 +17,7 @@ const customIcon = new Icon({
 
 //fetches the wikipedia info about the metro stations
 function getWikiDef(station){
-  // const encodedStationName = encodeURI(station.name);
+  //seperated this because of eslint error 
   const wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&'
   + 'format=json&origin=*&list=search&formatversion=2&srsearch=';
   
@@ -39,22 +39,14 @@ function getWikiDef(station){
 
 export default function MetroMarkers({route, setActiveStation}) {
   const [wikiData, setWikiData] = useState({});
-  const MAXNUMFETCH = 50;
 
   //gets all the wiki definitions when the route is changed
   useEffect(() => {
     async function fetchAll() {
       const defs = {};
       for (const point of route) {
-        //I added this condiditon in order to not overload the server accidentally
-        //I couldve added a sleep but it wouldve slowed down my website a lot
-        //the number of fetches for this website arent that big so we dont need to add 
-        //a set interval or timeout but this condition is there just in case
-        if(route.count <= MAXNUMFETCH){
-          defs[point.name] = await getWikiDef(point);
-        }else{
-          return;
-        }
+        defs[point.name] = await getWikiDef(point);
+        
         //build the defs with the def of the station wiki using the helper method
         
       }
