@@ -4,7 +4,6 @@ import MapExample from './components/MapExample';
 import RouteBlocks from './RouteBlocks';
 
 function App() {
-  //doesnt hve to be stat
   const [allStartStations, setAllStartStations] = useState([]);
   const [route, setroute] = useState([]);
   const [startStation, setStartStation] = useState('');
@@ -13,7 +12,7 @@ function App() {
   const [activeStation, setActiveStation] = useState(null);
 
 
-
+  //fetching all the stations from api/stations and setting allStartStations with it
   useEffect(() => {
     fetch('/api/stations').
       then(res => {
@@ -38,6 +37,7 @@ function App() {
   }, []);
   
 
+  //fetching stations in between a start and an end
   function handleStations(startStation, endStation){
     if(startStation !== endStation){
       fetch(`/api/${startStation}/${endStation}`).
@@ -57,6 +57,7 @@ function App() {
     }
   }
 
+  //fetching stations on a specific line(yellow,orange,blue,green)
   async function handlelineStations(startStation){
     const stationPosition = allStartStations.findIndex(station => station.name === startStation);
     const stationRoute = allStartStations[stationPosition].routeId;
@@ -73,6 +74,7 @@ function App() {
       });
   }
 
+  //creating the drop down menu with all the stations
   function dropDownStartStations(stations){
     return(
       <>
@@ -96,6 +98,7 @@ function App() {
     );
   }
 
+  //creating the drop down menu with all the stations on a specfic line
   function dropDownEndStations(stations){
     return( <>
       <label htmlFor="EndStation">End Station:</label>
@@ -116,6 +119,7 @@ function App() {
     </>);
   }
 
+  //creating the entire App component, displays components based on certain conditions
   return (
     <div className="App">
       <div className="header">

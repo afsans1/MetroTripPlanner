@@ -15,6 +15,7 @@ const customIcon = new Icon({
   iconAnchor: [22, 30]
 });
 
+//fetches the wikipedia info about the metro stations
 function getWikiDef(station){
   // const encodedStationName = encodeURI(station.name);
   const wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&'
@@ -39,6 +40,7 @@ function getWikiDef(station){
 export default function MetroMarkers({route, setActiveStation}) {
   const [wikiData, setWikiData] = useState({});
 
+  //gets all the wiki definitions when the route is changed
   useEffect(() => {
     async function fetchAll() {
       const defs = {};
@@ -51,7 +53,6 @@ export default function MetroMarkers({route, setActiveStation}) {
   }, [route]);
   
   const points = route.map(point => [point.coordinates[1], point.coordinates[0]] );
-  // const defs = route.map( (station) =>  getWikiDef(station));
   return (
     <>
       {route.map((point, i) => 
@@ -59,16 +60,22 @@ export default function MetroMarkers({route, setActiveStation}) {
           key={i}
           position={[point.coordinates[1], point.coordinates[0]]} 
           icon={customIcon}
-           
+          //when the marker is clicked it sets the active station 
+          //which then changes the style of the button
+          eventHandlers={{
+            click: () => {
+              setActiveStation(point.name);
+            },
+          }}
         >
           <Popup>
             <div 
               onClick={() => {
-                console.log('Marker clicked:', point.name);
                 setActiveStation(point.name);
               }}
               style={{border:`10px ${point.color} solid`, padding:'10px', borderRadius:'10px'}}>
               <h2>{point.name}</h2>
+              {/* if the info is there if appears, if its not it says loading... */}
               <p> {wikiData[point.name] || 'Loading...'}</p>
               <a href={`https://en.wikipedia.org/wiki/${point.name}`} 
                 target="_blank">Read more on Wikipedia</a>
