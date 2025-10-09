@@ -1,7 +1,4 @@
-import { 
-  MapContainer, 
-  TileLayer
-} from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import MetroMarkers from './MetroMarkers';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
@@ -9,11 +6,11 @@ import './Map.css';
 // See https://www.youtube.com/watch?v=jD6813wGdBA if you want to customize the map
 // further (optional)
 
-export default function MapExample({route = [], setActiveStation, setError}) {
-  const attribution = 
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+export default function MapExample({ route = [], setActiveStation, setError }) {
+  const attribution =
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  
+
   // TODO this is a demo of react-leaflet.  Feel free to modify the CSS.
   return (
     <div className="ui-container">
@@ -28,11 +25,12 @@ export default function MapExample({route = [], setActiveStation, setError}) {
         minZoom={10}
         maxZoom={16}
       >
-        <TileLayer
-          attribution={attribution}
-          url={tileUrl}
+        <TileLayer attribution={attribution} url={tileUrl} />
+        <MetroMarkers
+          route={route}
+          setActiveStation={setActiveStation}
+          setError={setError}
         />
-        <MetroMarkers route={route} setActiveStation={setActiveStation} setError={setError}/> 
       </MapContainer>
     </div>
   );

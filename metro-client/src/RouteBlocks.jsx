@@ -1,7 +1,7 @@
 export default function RouteBlocks({ route, activeStation }) {
   return (
     <>
-      {route.map(station => 
+      {route.map((station) => 
         <div key={station.name}>
           <button
             //defines the class name based on if activeStation is the current station
@@ -14,4 +14,3 @@ export default function RouteBlocks({ route, activeStation }) {
     </>
   );
 }
-

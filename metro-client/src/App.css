@@ -32,9 +32,9 @@
   height: 100vh;
 }
 
-.App > .header{
-  margin-left : 100px;
-  margin-right : 100px;
+.App > .header {
+  margin-left: 100px;
+  margin-right: 100px;
   border: 2px blue solid;
   border-radius: 20px;
   display: flex;
@@ -47,29 +47,27 @@
   border-radius: 4px;
 }
 
-
 .route-button:hover {
-  width:55px;    
+  width: 55px;
   border-color: #000;
 }
-
 
 .route-button.active {
-  width:55px;
+  width: 55px;
   border-color: #000;
 }
 
-.routeSection{
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
+.routeSection {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-form{
-  display:flex;
+form {
+  display: flex;
   flex-direction: column;
 }
 
-.error{
+.error {
   color: red;
 }

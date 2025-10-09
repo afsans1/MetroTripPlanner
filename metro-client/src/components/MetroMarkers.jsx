@@ -1,46 +1,42 @@
-import { Icon  } from 'leaflet';
-import { 
-  Marker,
-  Popup,
-  Polyline
-} from 'react-leaflet';
+import { Icon } from 'leaflet';
+import { Marker, Popup, Polyline } from 'react-leaflet';
 
 import markerImage from '../assets/marker-icon.png';
 import { useState, useEffect } from 'react';
 
-
 const customIcon = new Icon({
   iconUrl: markerImage,
   iconSize: [38, 38],
-  iconAnchor: [22, 30]
+  iconAnchor: [22, 30],
 });
 
 //fetches the wikipedia info about the metro stations
-function getWikiDef(station){
-  //seperated this because of eslint error 
-  const wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&'
-  + 'format=json&origin=*&list=search&formatversion=2&srsearch=';
-  try{
+function getWikiDef(station) {
+  //seperated this because of eslint error
+  const wikiUrl =
+    'https://en.wikipedia.org/w/api.php?action=query&' +
+    'format=json&origin=*&list=search&formatversion=2&srsearch=';
+  try {
     return fetch(`${wikiUrl}/${station.name}`).
-      then(res => {
-        if (!res.ok){
+      then((res) => {
+        if (!res.ok) {
           throw new Error(`Error! ${res.status}`);
         }
         return res.json();
       }).
-      then(data => {
+      then((data) => {
         data = data.query.search[0].snippet.replace(/<[^>]*>/g, '');
         return data;
       }).
-      catch(e => {
+      catch((e) => {
         throw new Error(`Error! ${e.message}`);
       });
-  }catch{
+  } catch (e) {
     throw new Error(`Error! ${e.message}`);
   }
 }
 
-export default function MetroMarkers({route, setActiveStation, setError}) {
+export default function MetroMarkers({ route, setActiveStation }) {
   const [wikiData, setWikiData] = useState({});
 
   //gets all the wiki definitions when the route is changed
@@ -48,10 +44,10 @@ export default function MetroMarkers({route, setActiveStation, setError}) {
     async function fetchAll() {
       const defs = {};
       for (const point of route) {
-        try{
+        try {
           defs[point.name] = getWikiDef(point);
-        }catch(e){
-          setError(e);
+        } catch (e) {
+          throw new Error(`Error! ${e.message}`);
         }
         //build the defs with the def of the station wiki using the helper method
       }
@@ -61,16 +57,19 @@ export default function MetroMarkers({route, setActiveStation, setError}) {
     //if the route isnt 0 it calls that helper method
     if (route.length > 0) fetchAll();
   }, [route]);
-  
-  const points = route.map(point => [point.coordinates[1], point.coordinates[0]] );
+
+  const points = route.map((point) => [
+    point.coordinates[1],
+    point.coordinates[0],
+  ]);
   return (
     <>
       {route.map((point, i) => 
         <Marker
           key={i}
-          position={[point.coordinates[1], point.coordinates[0]]} 
+          position={[point.coordinates[1], point.coordinates[0]]}
           icon={customIcon}
-          //when the marker is clicked it sets the active station 
+          //when the marker is clicked it sets the active station
           //which then changes the style of the button
           eventHandlers={{
             click: () => {
@@ -79,22 +78,31 @@ export default function MetroMarkers({route, setActiveStation, setError}) {
           }}
         >
           <Popup>
-            <div 
+            <div
               onClick={() => {
                 setActiveStation(point.name);
               }}
               //cant remove this inline styling since im using the points color
-              style={{border:`10px ${point.color} solid`, padding:'10px', borderRadius:'10px'}}>
+              style={{
+                border: `10px ${point.color} solid`,
+                padding: '10px',
+                borderRadius: '10px',
+              }}
+            >
               <h2>{point.name}</h2>
               {/* if the info is there if appears, if its not it says loading... */}
               <p> {wikiData[point.name] || 'Loading...'}</p>
-              <a href={`https://en.wikipedia.org/wiki/${point.name}`} 
-                target="_blank">Read more on Wikipedia</a>
+              <a
+                href={`https://en.wikipedia.org/wiki/${point.name}`}
+                target="_blank"
+              >
+                Read more on Wikipedia
+              </a>
             </div>
           </Popup>
         </Marker>
       )}
-      <Polyline pathOptions={{color: route[0]?.color}} positions={points} />
+      <Polyline pathOptions={{ color: route[0]?.color }} positions={points} />
     </>
   );
 }

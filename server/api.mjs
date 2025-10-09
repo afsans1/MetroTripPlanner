@@ -11,30 +11,30 @@ app.use(express.static('../metro-client/dist'));
 async function getStations() {
   if (stations.length > 0) return stations;
 
-  try{
+  try {
     const content = await fs.readFile('./data/stm_arrets_sig.geojson', 'utf-8');
     const jsonStations = JSON.parse(content);
 
     stations = [];
 
-    jsonStations.features.forEach(f => {
+    jsonStations.features.forEach((f) => {
       const name = f.properties.stop_name;
       const url = f.properties.stop_url;
       const routeId = f.properties.route_id;
       //making sure we are getting a station by making sure the url includes metro
       if (
-        url !== null 
-        && url.includes('metro') 
-        || routeId === 1 
-        || routeId === 2 
-        || routeId === 4 
-        || routeId === 5){
+        url !== null && url.includes('metro') ||
+        routeId === 1 ||
+        routeId === 2 ||
+        routeId === 4 ||
+        routeId === 5
+      ) {
         const station = new Object();
         station.name = name;
         station.coordinates = f.geometry.coordinates;
         station.routeId = routeId;
         station.selected = false;
-        switch(routeId){
+        switch (routeId) {
         case '1':
           station.color = 'green';
           break;
@@ -50,7 +50,7 @@ async function getStations() {
         default:
           station.color = 'pink';
         }
-        
+
         stations.push(station);
       }
     });
@@ -62,29 +62,38 @@ async function getStations() {
 
 //getting stations on a specific line(green,yellow,blue,orange)
 async function getStationsOnLine(num) {
-  if(stations.length === 0){
+  if (stations.length === 0) {
     stations = await getStations();
-  }else{
-    const stationsOnLine = stations.filter(station => station.routeId === num);
+  } else {
+    const stationsOnLine = stations.filter(
+      (station) => station.routeId === num,
+    );
     return stationsOnLine;
   }
 }
 
 //getting the stations in between the starting station and the end station
-async function getStationsBetween(startStation, endStation){
+async function getStationsBetween(startStation, endStation) {
   let newStations;
-  if(stations.length === 0){
+  if (stations.length === 0) {
     stations = await getStations();
-  }else{
-    const startPosition = stations.findIndex(station => station.name === startStation);
-    const endPosition = stations.findIndex(station => station.name === endStation);
-    if(startPosition === endPosition){
+  } else {
+    const startPosition = stations.findIndex(
+      (station) => station.name === startStation,
+    );
+    const endPosition = stations.findIndex(
+      (station) => station.name === endStation,
+    );
+    if (startPosition === endPosition) {
       return startPosition[startPosition];
-    }else if(startPosition < endPosition){
+    } else if (startPosition < endPosition) {
       newStations = stations.slice(startPosition, endPosition + 1);
-    }else{
+    } else {
       const reversedStations = stations.slice().reverse();
-      newStations = reversedStations.slice(-1 * (startPosition + 1), -1 * (endPosition + 1));
+      newStations = reversedStations.slice(
+        -1 * (startPosition + 1),
+        -1 * (endPosition + 1),
+      );
     }
     return newStations;
   }
@@ -101,48 +110,57 @@ app.get('/api/:num', async (req, res) => {
   const num = req.params.num;
 
   const lines = ['1', '2', '4', '5'];
-  if(!lines.includes(num)){
-    return res.status(400).json({ error: `Invalid line number: ${num}.`});
+  if (!lines.includes(num)) {
+    return res.status(400).json({ error: `Invalid line number: ${num}.` });
   }
-  try{
+  try {
     const json = await getStationsOnLine(num);
     if (!json || json.length === 0) {
-      return res.status(404).json({error: 'no stations on this line'});
+      return res.status(404).json({ error: 'no stations on this line' });
     }
     res.json(json);
-  }catch(e){
-    res.status(500).json({error: e});
+  } catch (e) {
+    res.status(500).json({ error: e });
   }
-  
 });
 
-//route to get the stations in between 
+//route to get the stations in between
 app.get('/api/:startStation/:endStation', async (req, res) => {
   const { startStation, endStation } = req.params;
 
   try {
     if (!startStation || !endStation) {
-      return res.status(400).json({ error: 'Start and end stations are required' });
+      return res.
+        status(400).
+        json({ error: 'Start and end stations are required' });
     }
 
     const allStations = await getStations();
-    const startExists = allStations.find(s => s.name === startStation);
-    const endExists = allStations.find(s => s.name === endStation);
+    const startExists = allStations.find((s) => s.name === startStation);
+    const endExists = allStations.find((s) => s.name === endStation);
 
     if (!startExists) {
-      return res.status(404).json({ error: `Start station "${startStation}" not found` });
+      return res.
+        status(404).
+        json({ error: `Start station '${startStation}' not found` });
     }
     if (!endExists) {
-      return res.status(404).json({ error: `End station "${endStation}" not found` });
+      return res.
+        status(404).
+        json({ error: `End station '${endStation}' not found` });
     }
     if (startStation === endStation) {
-      return res.status(400).json({ error: 'Start and end stations must be different' });
+      return res.
+        status(400).
+        json({ error: 'Start and end stations must be different' });
     }
 
     const json = await getStationsBetween(startStation, endStation);
 
     if (!json || json.length === 0) {
-      return res.status(404).json({ error: `No route between ${startStation} and ${endStation}` });
+      return res.
+        status(404).
+        json({ error: `No route between ${startStation} and ${endStation}` });
     }
 
     res.json(json);
@@ -151,13 +169,10 @@ app.get('/api/:startStation/:endStation', async (req, res) => {
   }
 });
 
-
-
-
 app.listen(port, () => {});
 
 app.use(function (req, res) {
-  res.status(404).send('Sorry can\'t find that!');
+  res.status(404).send(`Sorry can't find that!`);
 });
 
 // eslint-disable-next-line no-unused-vars
