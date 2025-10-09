@@ -9,6 +9,9 @@ Express + React app
 Description:
 The website should allow the user to create a trip planner based on which station they want to start at and where to end. The website should use the stm stops geojson file, parse it and use that list to display the correct stations. When the client clicks on a marker it should allow them to see the wikipedia definition of the station and access the wiki page.
 
+## Screenshot
+![ScreenShot](AppScreen.png)
+
 ## Structure
 
 There are two directories in the **root** of the project.
