@@ -82,9 +82,8 @@ async function getStationsBetween(startStation, endStation){
       return startPosition[startPosition];
     }else if(startPosition < endPosition){
       newStations = stations.slice(startPosition, endPosition + 1);
-    }else if(startPosition > endPosition){
-      const reversedStations = stations.slice().reverse();
-      newStations = reversedStations.slice(-1 * (startPosition + 1), -1 * (endPosition + 1));
+    }else{
+      newStations = stations.slice(endPosition, startPosition + 1);
     }
     return newStations;
   }
