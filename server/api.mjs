@@ -12,7 +12,7 @@ async function getStations() {
   if (stations.length > 0) return stations;
 
   try{
-    const content = await fs.readFile('server/data/stm_arrets_sig.geojson', 'utf-8');
+    const content = await fs.readFile('./data/stm_arrets_sig.geojson', 'utf-8');
     const jsonStations = JSON.parse(content);
 
     stations = [];
@@ -154,9 +154,7 @@ app.get('/api/:startStation/:endStation', async (req, res) => {
 
 
 
-app.listen(port, () => {
-  console.log(`Example app app listening at http://localhost:${port}`);
-});
+app.listen(port, () => {});
 
 app.use(function (req, res) {
   res.status(404).send('Sorry can\'t find that!');
@@ -168,9 +166,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-process.on('SIGTERM', () => {
-  console.debug('SIGTERM signal received: closing HTTP server');
-  server.close(() => {
-    console.debug('HTTP server closed');
-  });
-});
+process.on('SIGTERM', () => app.close(() => {}));

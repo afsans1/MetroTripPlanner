@@ -117,7 +117,7 @@ function App() {
           <div className="routeSection">
             <RouteBlocks route={route}  activeStation={activeStation} />
           </div>
-          <MapExample route={route} setActiveStation={setActiveStation}/>
+          <MapExample route={route} setActiveStation={setActiveStation} setError={setError}/>
         </>
         : <div></div>}
     </div>

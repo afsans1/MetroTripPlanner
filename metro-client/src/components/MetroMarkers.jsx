@@ -20,24 +20,27 @@ function getWikiDef(station){
   //seperated this because of eslint error 
   const wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&'
   + 'format=json&origin=*&list=search&formatversion=2&srsearch=';
-  
-  return fetch(`${wikiUrl}/${station.name}`).
-    then(res => {
-      if (!res.ok){
-        throw new Error(`Error! ${res.status}`);
-      }
-      return res.json();
-    }).
-    then(data => {
-      data = data.query.search[0].snippet.replace(/<[^>]*>/g, '');
-      return data;
-    }).
-    catch(e => {
-      throw new Error(`Error! ${e.message}`);
-    });
+  try{
+    return fetch(`${wikiUrl}/${station.name}`).
+      then(res => {
+        if (!res.ok){
+          throw new Error(`Error! ${res.status}`);
+        }
+        return res.json();
+      }).
+      then(data => {
+        data = data.query.search[0].snippet.replace(/<[^>]*>/g, '');
+        return data;
+      }).
+      catch(e => {
+        throw new Error(`Error! ${e.message}`);
+      });
+  }catch{
+    throw new Error(`Error! ${e.message}`);
+  }
 }
 
-export default function MetroMarkers({route, setActiveStation}) {
+export default function MetroMarkers({route, setActiveStation, setError}) {
   const [wikiData, setWikiData] = useState({});
 
   //gets all the wiki definitions when the route is changed
@@ -45,10 +48,12 @@ export default function MetroMarkers({route, setActiveStation}) {
     async function fetchAll() {
       const defs = {};
       for (const point of route) {
-        defs[point.name] = await getWikiDef(point);
-        
+        try{
+          defs[point.name] = getWikiDef(point);
+        }catch(e){
+          setError(e);
+        }
         //build the defs with the def of the station wiki using the helper method
-        
       }
       //sets the wikidata with the built defs
       setWikiData(defs);
