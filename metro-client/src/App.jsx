@@ -4,12 +4,15 @@ import MapExample from './components/MapExample';
 import RouteBlocks from './RouteBlocks';
 
 function App() {
+  //doesnt hve to be stat
   const [allStartStations, setAllStartStations] = useState([]);
   const [route, setroute] = useState([]);
   const [startStation, setStartStation] = useState('');
   const [endStation, setEndStation] = useState('');
-  const [routeStations, setRouteStations] = useState([]);
-  
+  const [lineStations, setlineStations] = useState([]);
+  const [activeStation, setActiveStation] = useState(null);
+
+
 
   useEffect(() => {
     fetch('/api/stations').
@@ -53,7 +56,7 @@ function App() {
     }
   }
 
-  async function handleRouteStations(startStation){
+  async function handlelineStations(startStation){
     const stationPosition = allStartStations.findIndex(station => station.name === startStation);
     const stationRoute = allStartStations[stationPosition].routeId;
     fetch(`/api/${stationRoute}`).
@@ -63,7 +66,7 @@ function App() {
         }
         return res.json();
       }).
-      then(data => setRouteStations(data)).
+      then(data => setlineStations(data)).
       catch(e => {
         throw new Error(`Error! ${e.message}`);
       });
@@ -79,7 +82,7 @@ function App() {
           onChange={(e) =>{
             const newStart = e.target.value;
             setStartStation(newStart);
-            handleRouteStations(newStart);
+            handlelineStations(newStart);
             setEndStation('');
           }}
         >
@@ -119,7 +122,7 @@ function App() {
         <h2>Select Start and End Stations</h2>
         <form>
           {dropDownStartStations(allStartStations)}
-          {startStation && routeStations ? dropDownEndStations(routeStations) : <div></div>}
+          {startStation && lineStations ? dropDownEndStations(lineStations) : <div></div>}
         </form>
         
       </div>
@@ -129,9 +132,9 @@ function App() {
             {route[0].color} Line:{route.length} stations
           </h3>
           <div style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap'}}>
-            <RouteBlocks route={route} setroute={setroute}/>
+            <RouteBlocks route={route} setroute={setroute} activeStation={activeStation}/>
           </div>
-          <MapExample route={route}/>
+          <MapExample route={route} setActiveStation={setActiveStation}/>
         </>
         : <div></div>}
     </div>

@@ -9,7 +9,7 @@ import './Map.css';
 // See https://www.youtube.com/watch?v=jD6813wGdBA if you want to customize the map
 // further (optional)
 
-export default function MapExample({route = []}) {
+export default function MapExample({route = [], setActiveStation}) {
   const attribution = 
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -32,7 +32,7 @@ export default function MapExample({route = []}) {
           attribution={attribution}
           url={tileUrl}
         />
-        <MetroMarkers route={route}/> 
+        <MetroMarkers route={route} setActiveStation={setActiveStation}/> 
       </MapContainer>
     </div>
   );

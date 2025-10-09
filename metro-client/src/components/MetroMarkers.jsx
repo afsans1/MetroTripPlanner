@@ -6,6 +6,8 @@ import {
 } from 'react-leaflet';
 
 import markerImage from '../assets/marker-icon.png';
+import { useState, useEffect } from 'react';
+
 
 const customIcon = new Icon({
   iconUrl: markerImage,
@@ -34,7 +36,20 @@ function getWikiDef(station){
     });
 }
 
-export default function MetroMarkers({route}) {
+export default function MetroMarkers({route, setActiveStation}) {
+  const [wikiData, setWikiData] = useState({});
+
+  useEffect(() => {
+    async function fetchAll() {
+      const defs = {};
+      for (const point of route) {
+        defs[point.name] = await getWikiDef(point);
+      }
+      setWikiData(defs);
+    }
+    if (route.length > 0) fetchAll();
+  }, [route]);
+  
   const points = route.map(point => [point.coordinates[1], point.coordinates[0]] );
   // const defs = route.map( (station) =>  getWikiDef(station));
   return (
@@ -45,10 +60,13 @@ export default function MetroMarkers({route}) {
           position={[point.coordinates[1], point.coordinates[0]]} 
           icon={customIcon} 
         >
-          <Popup>
-            <div style={{border:`10px ${point.color} solid`, padding:'10px'}}>
+          <Popup onClick={(e) =>{
+            setActiveStation(e.target.name);
+            console.log(e);
+          }}>
+            <div style={{border:`10px ${point.color} solid`, padding:'10px', borderRadius:'10px'}}>
               <h2>{point.name}</h2>
-              <p> {getWikiDef(point).then(data => data)}</p>
+              <p> {wikiData[point.name] || 'Loading'}</p>
               <a href={`https://en.wikipedia.org/wiki/${point.name}`} 
                 target="_blank">Read more on Wikipedia</a>
             </div>

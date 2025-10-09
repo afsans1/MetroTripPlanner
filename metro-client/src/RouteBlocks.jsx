@@ -1,4 +1,4 @@
-export default function RouteBlocks({ route, setroute }) {
+export default function RouteBlocks({ route, setroute, activeStation }) {
 
   //   const [selected, setSelected] = useState([]);
   
@@ -23,7 +23,7 @@ export default function RouteBlocks({ route, setroute }) {
             onClick={() => selectButton(station)}
             style={{
               backgroundColor: station.color,
-              width: station.selected ? '55px' : '40px',
+              width: station.selected || activeStation === station.name ? '55px' : '40px',
               height: '20px'
             }}
           ></button>
