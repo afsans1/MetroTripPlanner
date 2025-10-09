@@ -58,15 +58,18 @@ export default function MetroMarkers({route, setActiveStation}) {
         <Marker
           key={i}
           position={[point.coordinates[1], point.coordinates[0]]} 
-          icon={customIcon} 
+          icon={customIcon}
+           
         >
-          <Popup onClick={(e) =>{
-            setActiveStation(e.target.name);
-            console.log(e);
-          }}>
-            <div style={{border:`10px ${point.color} solid`, padding:'10px', borderRadius:'10px'}}>
+          <Popup>
+            <div 
+              onClick={() => {
+                console.log('Marker clicked:', point.name);
+                setActiveStation(point.name);
+              }}
+              style={{border:`10px ${point.color} solid`, padding:'10px', borderRadius:'10px'}}>
               <h2>{point.name}</h2>
-              <p> {wikiData[point.name] || 'Loading'}</p>
+              <p> {wikiData[point.name] || 'Loading...'}</p>
               <a href={`https://en.wikipedia.org/wiki/${point.name}`} 
                 target="_blank">Read more on Wikipedia</a>
             </div>

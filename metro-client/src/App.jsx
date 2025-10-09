@@ -36,6 +36,7 @@ function App() {
         
       });
   }, []);
+  
 
   function handleStations(startStation, endStation){
     if(startStation !== endStation){
@@ -132,7 +133,7 @@ function App() {
             {route[0].color} Line:{route.length} stations
           </h3>
           <div style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap'}}>
-            <RouteBlocks route={route} setroute={setroute} activeStation={activeStation}/>
+            <RouteBlocks route={route}  activeStation={activeStation}/>
           </div>
           <MapExample route={route} setActiveStation={setActiveStation}/>
         </>

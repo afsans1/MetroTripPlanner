@@ -7,6 +7,7 @@ let stations = [];
 
 app.use(express.static('../metro-client/dist'));
 
+//getting all of the metro stations
 async function getStations() {
   if (stations.length > 0) return stations;
 
@@ -59,6 +60,7 @@ async function getStations() {
   return stations;
 }
 
+//getting stations on a specific line(green,yellow,blue,orange)
 async function getStationsOnLine(num) {
   if(stations.length === 0){
     stations = await getStations();
@@ -68,6 +70,7 @@ async function getStationsOnLine(num) {
   }
 }
 
+//getting the stations in between the starting station and the end station
 async function getStationsBetween(startStation, endStation){
   let newStations;
   if(stations.length === 0){
@@ -93,20 +96,67 @@ async function getStationsBetween(startStation, endStation){
   }
 }
 
+//route to get all of the metro stations
 app.get('/api/stations', async function (req, res) {
   const json = await getStations();
   res.json(json);
 });
 
+//route to get the metro stations on a specific line
 app.get('/api/:num', async (req, res) => {
-  const json = await getStationsOnLine(req.params.num);
-  res.json(json);
+  const num = req.params.num;
+
+  const lines = ['1', '2', '4', '5'];
+  if(!lines.includes(num)){
+    return res.status(400).json({ error: `Invalid line number: ${num}.`});
+  }
+  try{
+    const json = await getStationsOnLine(num);
+    if (!json || json.length === 0) {
+      return res.status(404).json({error: 'no stations on this line'});
+    }
+    res.json(json);
+  }catch(e){
+    res.status(500).json({error: e});
+  }
+  
 });
 
+//route to get the stations in between 
 app.get('/api/:startStation/:endStation', async (req, res) => {
-  const json = await getStationsBetween(req.params.startStation, req.params.endStation);
-  res.json(json);
+  const { startStation, endStation } = req.params;
+
+  try {
+    if (!startStation || !endStation) {
+      return res.status(400).json({ error: 'Start and end stations are required' });
+    }
+
+    const allStations = await getStations();
+    const startExists = allStations.find(s => s.name === startStation);
+    const endExists = allStations.find(s => s.name === endStation);
+
+    if (!startExists) {
+      return res.status(404).json({ error: `Start station "${startStation}" not found` });
+    }
+    if (!endExists) {
+      return res.status(404).json({ error: `End station "${endStation}" not found` });
+    }
+    if (startStation === endStation) {
+      return res.status(400).json({ error: 'Start and end stations must be different' });
+    }
+
+    const json = await getStationsBetween(startStation, endStation);
+
+    if (!json || json.length === 0) {
+      return res.status(404).json({ error: `No route between ${startStation} and ${endStation}` });
+    }
+
+    res.json(json);
+  } catch (err) {
+    res.status(500).json({ error: `Internal server error: ${err.message}` });
+  }
 });
+
 
 
 
@@ -118,12 +168,9 @@ app.use(function (req, res) {
   res.status(404).send('Sorry can\'t find that!');
 });
 
-// const server = app.listen(port);
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
 
-// // SIGTERM doesn't work on Windows. This works when the server is a Unix process and we `kill` it
-// process.on('SIGTERM', () => {
-//   console.debug('SIGTERM signal received: closing HTTP server');
-//   server.close(() => {
-//     console.debug('HTTP server closed');
-//   });
-// });
