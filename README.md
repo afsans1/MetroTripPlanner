@@ -60,6 +60,35 @@ I fetch from wikipedia multiple times and that could overload the server if ther
 I was planning on implementing the multi-line feature but i didnt have any time with my other midterms.
 If the wikipedia link is wrong the website will crash.
 
-## Sourced
+## Component Hierarchy 
+App
+├── DropDownStations (Start Station)
+├── DropDownStations (End Station)
+├── RouteBlocks
+│   └── (renders route station blocks)
+└── MapExample
+    └── MetroMarkers
+        ├── Marker (Leaflet)
+        │   └── Popup
+        └── Polyline
+
+## Sources
 Jaya's lectures, examples and exerices.
 Assignment 1
+
+Open Data STM (Société de transport de Montréal):
+Metro station data (names, coordinates, routes) obtained from the STM Open Data Portal.
+https://www.stm.info/en/about/developers
+
+Leaflet & React-Leaflet:
+Used for displaying interactive maps and markers.
+https://leafletjs.com/
+
+https://react-leaflet.js.org/
+
+Marker Icon:
+Default Leaflet marker image used from Leaflet’s assets.
+
+Wikipedia API:
+Used to fetch descriptions of metro stations.
+https://www.mediawiki.org/wiki/API:Main_page
