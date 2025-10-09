@@ -1,4 +1,4 @@
-# A2 Metro Trip Planner
+# A2 Metro Trip Planner Afsana Khayer
 
 ## Requirements
 
@@ -59,3 +59,7 @@ npm run start
 I fetch from wikipedia multiple times and that could overload the server if there were a lot of stations. Instead of fetching for all the station in the route I could just fetch for the popup that is clicked.
 I was planning on implementing the multi-line feature but i didnt have any time with my other midterms.
 If the wikipedia link is wrong the website will crash.
+
+## Sourced
+Jaya's lectures, examples and exerices.
+Assignment 1

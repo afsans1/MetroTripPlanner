@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import MapExample from './components/MapExample';
-import RouteBlocks from './RouteBlocks';
-import DropDownStations from './DropDownStations';
+import RouteBlocks from './components/RouteBlocks';
+import DropDownStations from './components/DropDownStations';
 
 const AMOUNT_OF_STATION = 73;
 function App() {
