@@ -45,10 +45,13 @@ export default function MetroMarkers({route, setActiveStation}) {
     async function fetchAll() {
       const defs = {};
       for (const point of route) {
+        //build the defs with the def of the station wiki using the helper method
         defs[point.name] = await getWikiDef(point);
       }
+      //sets the wikidata with the built defs
       setWikiData(defs);
     }
+    //if the route isnt 0 it calls that helper method
     if (route.length > 0) fetchAll();
   }, [route]);
   
@@ -73,6 +76,7 @@ export default function MetroMarkers({route, setActiveStation}) {
               onClick={() => {
                 setActiveStation(point.name);
               }}
+              //cant remove this inline styling since im using the points color
               style={{border:`10px ${point.color} solid`, padding:'10px', borderRadius:'10px'}}>
               <h2>{point.name}</h2>
               {/* if the info is there if appears, if its not it says loading... */}

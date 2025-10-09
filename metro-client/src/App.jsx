@@ -127,16 +127,20 @@ function App() {
         <h2>Select Start and End Stations</h2>
         <form>
           {dropDownStartStations(allStartStations)}
+          {/* if the start station is selected and we have the stations on that line we display
+          the  dropDownEndStations*/}
           {startStation && lineStations ? dropDownEndStations(lineStations) : <div></div>}
         </form>
         
       </div>
+      {/* if we have the endStation and the route of from the start to the end is greater than 0
+      we display the RouteBlocks and the MapExample */}
       { endStation && route.length > 0 ? 
         <>
           <h3 style={{ color: route[0].color}}>
             {route[0].color} Line:{route.length} stations
           </h3>
-          <div style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap'}}>
+          <div className="routeSection">
             <RouteBlocks route={route}  activeStation={activeStation}/>
           </div>
           <MapExample route={route} setActiveStation={setActiveStation}/>

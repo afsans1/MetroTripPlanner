@@ -40,3 +40,14 @@
   width:55px;
   border-color: #000;
 }
+
+.routeSection{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+
+form{
+  display:flex;
+  flex-direction: column;
+}
