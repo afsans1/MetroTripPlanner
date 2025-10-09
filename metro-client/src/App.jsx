@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import MapExample from './components/MapExample';
+import Map from './components/Map';
 import RouteBlocks from './components/RouteBlocks';
 import DropDownStations from './components/DropDownStations';
 
@@ -125,7 +125,7 @@ function App() {
           <div className="routeSection">
             <RouteBlocks route={route} activeStation={activeStation} />
           </div>
-          <MapExample
+          <Map
             route={route}
             setActiveStation={setActiveStation}
             setError={setError}
