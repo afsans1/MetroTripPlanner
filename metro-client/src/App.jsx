@@ -80,6 +80,7 @@ function App() {
             const newStart = e.target.value;
             setStartStation(newStart);
             handleRouteStations(newStart);
+            setEndStation('');
           }}
         >
           <option value="" disabled>-- Select A Starting Station --</option>
