@@ -14,6 +14,11 @@
   height: 100vh;
 }
 
-.App > div{
-  border: 5px blue solid;
+.App > .header{
+  margin-left : 100px;
+  margin-right : 100px;
+  border: 2px blue solid;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
 }

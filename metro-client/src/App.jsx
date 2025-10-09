@@ -9,10 +9,6 @@ function App() {
   const [startStation, setStartStation] = useState('');
   const [endStation, setEndStation] = useState('');
   const [routeStations, setRouteStations] = useState([]);
-  const buttons = document.querySelectorAll('button');
-  buttons.forEach(button => 
-    button.addEventListener('click', e=> e.target.style.width = '55px')
-  );
   
 
   useEffect(() => {
@@ -117,7 +113,7 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      <div className="header">
         <h1>Metro Trip Planner</h1>
         <h2>Select Start and End Stations</h2>
         <form>

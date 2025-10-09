@@ -13,8 +13,30 @@ const customIcon = new Icon({
   iconAnchor: [22, 30]
 });
 
+async function getWikiDef(station){
+  // const encodedStationName = encodeURI(station.name);
+  const wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&'
+  + 'format=json&origin=*&list=search&formatversion=2&srsearch=';
+  
+  return fetch(`${wikiUrl}/${station.name}`).
+    then(res => {
+      if (!res.ok){
+        throw new Error(`Error! ${res.status}`);
+      }
+      return res.json();
+    }).
+    then(data => {
+      data = data.query.search[0].snippet.replace(/<[^>]*>/g, '');
+      return data;
+    }).
+    catch(e => {
+      throw new Error(`Error! ${e.message}`);
+    });
+}
+
 export default function MetroMarkers({route}) {
   const points = route.map(point => [point.coordinates[1], point.coordinates[0]] );
+  // const defs = route.map( (station) =>  getWikiDef(station));
   return (
     <>
       {route.map((point, i) => 
@@ -23,7 +45,7 @@ export default function MetroMarkers({route}) {
           position={[point.coordinates[1], point.coordinates[0]]} 
           icon={customIcon} 
         >
-          <Popup><p>{point.name}</p></Popup>
+          <Popup><p>{point.name} {getWikiDef(point)}</p></Popup>
         </Marker>
       )}
       <Polyline pathOptions={{color: route[0]?.color}} positions={points} />
