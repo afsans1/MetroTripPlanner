@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import MapExample from './components/MapExample';
 import RouteBlocks from './RouteBlocks';
+import DropDownStations from './DropDownStations';
 
+const AMOUNT_OF_STATION = 73;
 function App() {
   const [allStartStations, setAllStartStations] = useState([]);
   const [route, setroute] = useState([]);
@@ -10,6 +12,7 @@ function App() {
   const [endStation, setEndStation] = useState('');
   const [lineStations, setlineStations] = useState([]);
   const [activeStation, setActiveStation] = useState(null);
+  const [error, setError] = useState('');
 
 
   //fetching all the stations from api/stations and setting allStartStations with it
@@ -22,9 +25,7 @@ function App() {
         return res.json();
       }).
       then(data => {
-        
-        // setroute(data);
-        if(data.length === 73){
+        if(data.length === AMOUNT_OF_STATION){
           setAllStartStations(data);
         }else{
           throw new Error(`Error! Didn't get all the stations! Length: ${data.length}`);
@@ -39,6 +40,7 @@ function App() {
 
   //fetching stations in between a start and an end
   function handleStations(startStation, endStation){
+    setError('');
     if(startStation !== endStation){
       fetch(`/api/${startStation}/${endStation}`).
         then(res => {
@@ -52,7 +54,7 @@ function App() {
           throw new Error(`Error! ${e.message}`);
         });
     }else{
-      console.log('No need to plan out a trip to the station that you are already at!');
+      setError('No need to plan out a trip to the station that you are already at!');
       setroute([]);
     }
   }
@@ -74,62 +76,34 @@ function App() {
       });
   }
 
-  //creating the drop down menu with all the stations
-  function dropDownStartStations(stations){
-    return(
-      <>
-        <label>Start Station:</label>
-        <select
-          id="startStation"
-          name="startStation" value={startStation}
-          onChange={(e) =>{
-            const newStart = e.target.value;
-            setStartStation(newStart);
-            handlelineStations(newStart);
-            setEndStation('');
-          }}
-        >
-          <option value="" disabled>-- Select A Starting Station --</option>
-          {stations.map(station => 
-            <option key={station.name} value={station.name}>{station.name}</option>
-          )}
-        </select>
-      </>
-    );
-  }
-
-  //creating the drop down menu with all the stations on a specfic line
-  function dropDownEndStations(stations){
-    return( <>
-      <label htmlFor="EndStation">End Station:</label>
-      <select
-        id="endStation"
-        name="endStation" value={endStation}
-        onChange={(e) =>{
-          const newEnd = e.target.value; 
-          setEndStation(newEnd);
-          handleStations(startStation, newEnd);
-        }}
-      >
-        <option value="" disabled>-- Select An Ending Station --</option>
-        {stations.map(station => 
-          <option key={station.name} value={station.name}>{station.name}</option>
-        )}
-      </select>
-    </>);
-  }
-
   //creating the entire App component, displays components based on certain conditions
   return (
     <div className="App">
       <div className="header">
         <h1>Metro Trip Planner</h1>
         <h2>Select Start and End Stations</h2>
+        <p className="error">{error}</p>
         <form>
-          {dropDownStartStations(allStartStations)}
+          <DropDownStations stations={allStartStations} station={startStation} 
+            onChange={(e) =>{
+              const newStart = e.target.value;
+              setStartStation(newStart);
+              handlelineStations(newStart);
+              setEndStation('');
+            }}
+            label="Start Station:"
+          />
           {/* if the start station is selected and we have the stations on that line we display
           the  dropDownEndStations*/}
-          {startStation && lineStations ? dropDownEndStations(lineStations) : <div></div>}
+          {startStation && lineStations.length > 0 ? 
+            <DropDownStations stations={lineStations} station={endStation} 
+              onChange={(e) =>{
+                const newEnd = e.target.value; 
+                setEndStation(newEnd);
+                handleStations(startStation, newEnd);
+              }}
+              label="End Station:"
+            /> : <div></div>}
         </form>
         
       </div>
@@ -141,7 +115,7 @@ function App() {
             {route[0].color} Line:{route.length} stations
           </h3>
           <div className="routeSection">
-            <RouteBlocks route={route}  activeStation={activeStation}/>
+            <RouteBlocks route={route}  activeStation={activeStation} />
           </div>
           <MapExample route={route} setActiveStation={setActiveStation}/>
         </>

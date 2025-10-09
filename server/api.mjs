@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 const app = express();
 const port = 3000;
 let stations = [];
-//check if the route ecxists
+
 app.use(express.static('../metro-client/dist'));
 
 //getting all of the metro stations
@@ -168,3 +168,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
+process.on('SIGTERM', () => {
+  console.debug('SIGTERM signal received: closing HTTP server');
+  server.close(() => {
+    console.debug('HTTP server closed');
+  });
+});
