@@ -7,7 +7,12 @@ let stations = [];
 
 app.use(express.static('../metro-client/dist'));
 
-//getting all of the metro stations
+
+/**
+ * getting all of the metro stations
+ * 
+ * @returns all of the stations (should be 73 stations)
+ */
 async function getStations() {
   if (stations.length > 0) return stations;
 
@@ -60,7 +65,13 @@ async function getStations() {
   return stations;
 }
 
-//getting stations on a specific line(green,yellow,blue,orange)
+
+/**
+ * getting stations on a specific line(green,yellow,blue,orange)
+ * 
+ * @param num the number of the specific line
+ * @returns the stations on that line
+ */
 async function getStationsOnLine(num) {
   if (stations.length === 0) {
     stations = await getStations();
@@ -72,7 +83,14 @@ async function getStationsOnLine(num) {
   }
 }
 
-//getting the stations in between the starting station and the end station
+
+/**
+ * getting the stations in between the starting station and the end station
+ * 
+ * @param startStation the start station of the trip
+ * @param endStation the end station of the trip
+ * @returns the stations in between those stations (including them)
+ */
 async function getStationsBetween(startStation, endStation) {
   let newStations;
   if (stations.length === 0) {

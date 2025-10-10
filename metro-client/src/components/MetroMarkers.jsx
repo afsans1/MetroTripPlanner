@@ -10,7 +10,10 @@ const customIcon = new Icon({
   iconAnchor: [22, 30],
 });
 
-//fetches the wikipedia info about the metro stations
+/**
+ * fetches the wikipedia info about the metro stations
+ * @param station the station that we want the wiki info from
+ */
 function getWikiDef(station) {
   //seperated this because of eslint error
   const wikiUrl =
@@ -36,6 +39,13 @@ function getWikiDef(station) {
   }
 }
 
+/**
+ * This function creates the metro markers with the popups and the polyline that connects them
+ * 
+ * @param route the route of the metro trip
+ * @param setActiveStation method to set the currently selected station
+ * @returns MetroMarkers component
+ */
 export default function MetroMarkers({ route, setActiveStation }) {
   const [wikiData, setWikiData] = useState({});
 

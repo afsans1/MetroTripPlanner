@@ -37,7 +37,13 @@ function App() {
       });
   }, []);
 
-  //fetching stations in between a start and an end
+  
+  /**
+ * fetching stations in between a start and an end
+ * 
+ * @param startStation the start station of the trip
+ * @param endStation the end station of the trip
+ */
   function handleStations(startStation, endStation) {
     setError('');
     if (startStation !== endStation) {
@@ -60,7 +66,11 @@ function App() {
     }
   }
 
-  //fetching stations on a specific line(yellow,orange,blue,green)
+  /**
+ * fetching stations on a specific line(yellow,orange,blue,green)
+ * 
+ * @param startStation the start station of the trip
+ */
   async function handlelineStations(startStation) {
     const stationPosition = allStartStations.findIndex(
       (station) => station.name === startStation,

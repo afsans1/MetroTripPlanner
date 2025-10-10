@@ -1,3 +1,8 @@
+/**
+ * This function creates the routeblock that represent the stations to take for the trip
+ * @param route the route for the trip
+ * @param activeStation the currently selected station
+ */
 export default function RouteBlocks({ route, activeStation }) {
   return (
     <>

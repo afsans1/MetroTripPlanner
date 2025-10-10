@@ -6,6 +6,13 @@ import './Map.css';
 // See https://www.youtube.com/watch?v=jD6813wGdBA if you want to customize the map
 // further (optional)
 
+/**
+ * This function creates the map in montreal
+ * @param route route of the trip 
+ * @param setActiveStation method to set the current selected station
+ * @param setError method to set the error in the p elem
+ * @returns Map component
+ */
 export default function Map({ route = [], setActiveStation, setError }) {
   const attribution =
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
