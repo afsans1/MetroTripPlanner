@@ -11,5 +11,16 @@
   "keywords": [],
   "author": "Maja Frydrychowicz, Jaya Nilakantan",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/dawson-cst-cohort-2026/520/section3/AfsanaKhayer/assignment2.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/dawson-cst-cohort-2026/520/section3/AfsanaKhayer/assignment2/issues"
+  },
+  "homepage": "https://gitlab.com/dawson-cst-cohort-2026/520/section3/AfsanaKhayer/assignment2#readme"
 }

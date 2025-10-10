@@ -1,3 +1,21 @@
+@media (max-width: 768px) {
+  .App {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  select {
+    font-size: 0.95rem;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -12,4 +30,44 @@
 
 #root {
   height: 100vh;
+}
+
+.App > .header {
+  margin-left: 100px;
+  margin-right: 100px;
+  border: 2px blue solid;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.route-button {
+  width: 40px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.route-button:hover {
+  width: 55px;
+  border-color: #000;
+}
+
+.route-button.active {
+  width: 55px;
+  border-color: #000;
+}
+
+.routeSection {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: red;
 }
