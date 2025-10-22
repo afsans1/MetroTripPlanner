@@ -1,14 +1,14 @@
 # use a specific version that matches your dev/prod environment
 image: node:24-bookworm-slim
 
-# if any of the conditions below is satisfied, the pipeline runs  
+# if any of the conditions below is satisfied, the pipeline runs
 workflow:
   rules:
-  # a merge request
+    # a merge request
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-  # a new tag pushed
+    # a new tag pushed
     - if: $CI_COMMIT_TAG
-  # commit made to the default branch (usually main)
+    # commit made to the default branch (usually main)
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 stages:
@@ -17,10 +17,10 @@ stages:
   - test
   - deploy
 
-# default section is like putting a copy of these lines in every job  
+# default section is like putting a copy of these lines in every job
 default:
-  cache:  # Cache modules in between jobs for the same branch based on package-lock.json file
-    key: 
+  cache: # Cache modules in between jobs for the same branch based on package-lock.json file
+    key:
       prefix: $CI_COMMIT_REF_NAME
       files:
         - server/package-lock.json
@@ -31,18 +31,18 @@ default:
       - metro-client/.npm
   # run this before every job; will check the cache first
   before_script:
-   - cd server && npm ci --cache .npm --prefer-offline && cd ../metro-client && npm ci --cache .npm --prefer-offline && cd ..
+    - cd server && npm ci --cache .npm --prefer-offline && cd ../metro-client && npm ci --cache .npm --prefer-offline && cd ..
 
 # run lint on server js files
 lint-server:
-  stage: lint 
+  stage: lint
   script:
-    - cd server && ./node_modules/eslint/bin/eslint.js --ext js,jsx,mjs,cjs . 
+    - cd server && ./node_modules/eslint/bin/eslint.js --ext js,jsx,mjs,cjs .
   allow_failure: false
 
 # run lint on client js files
 lint-client:
-  stage: lint 
+  stage: lint
   script:
     - cd metro-client && ./node_modules/eslint/bin/eslint.js --ext js,jsx,mjs,cjs .
   allow_failure: false
